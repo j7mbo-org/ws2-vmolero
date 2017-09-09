@@ -1,0 +1,20 @@
+{
+  "name": "websockets-workshop/2-subscribing-blocking",
+  "require": {
+    "components/bootstrap": "4.0.*@dev",
+    "cboden/ratchet": "^0.3.6"
+  },
+  "autoload": {
+    "psr-4": {
+      "Workshop\\": "src/"
+    }
+  },
+  "scripts": {
+    "post-install-cmd": [
+      "php -r \"copy('vendor/components/jquery/jquery.min.js', 'web/assets/jquery.min.js');\"",
+      "php -r \"copy('vendor/components/bootstrap/js/bootstrap.min.js', 'web/assets/bootstrap.min.js');\"",
+      "php -r \"copy('vendor/components/bootstrap/css/bootstrap.min.css', 'web/assets/bootstrap.min.css');\"",
+      "php -r \"copy('vendor/components/bootstrap/css/bootstrap.min.css.map', 'web/assets/bootstrap.min.css.map');\""
+    ]
+  }
+}

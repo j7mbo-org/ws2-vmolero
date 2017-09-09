@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link rel="stylesheet" href="assets/bootstrap.min.css" />
+    </head>
+    <body style="padding-top: 3.5rem;">
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+            <a class="navbar-brand" href="#">WS1</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                </ul>
+            </div>
+            <div id="progress" class="progress" style="width: 100% !important;">
+                <div class="progress-bar progress-bar-animated"></div>
+            </div>
+        </nav>
+
+        <div class="jumbotron">
+            <div class="container">
+                <h1 class="display-3">Websocket Tutorial 2</h1>
+                <h2><small class="text-muted">Subscribing / Blocking Architecture</small></h2>
+                <p>
+                    WS2 covers subscribing and unsubscribing from two different topics (one for a simple stream of
+                    date/time strings and one by polling an SQLite database), and afterwards we'll see how blocking
+                    can affect an application. This time you will be using the autobahn library (WAMP v1).
+                </p>
+                <p>
+                    You only need to touch <span class="font-weight-bold">two files</span> to make this all work! These
+                    are: <code class="highlighter-rouge">web/assets/websockets.js</code> and <code class="highlighter-rouge">src/EventHandler.php</code>.
+                </p>
+                <p>
+                    You can access the docker container with:
+                    <code class="highlighter-rouge">
+                        docker exec -i -t $(docker-compose ps | grep 'php' | awk '{print $1}') /bin/bash
+                    </code>
+                </p>
+                <p>
+                    To start the Websocket server within the docker container, run:
+                    <code class="highlighter-rouge">php /appdata/bin/websocket-server.php</code>
+                </p>
+                <hr />
+                <p class="lead">
+                    To successfully complete WS2 you need to complete the tasks below.
+                </p>
+                <p>
+                    <ul class="list-group">
+                        <li class="list-group-item list-group-item-primary">
+                            <span class="badge badge-success">#1</span>
+                            Clicking subscribe buttons for either time or sql data should subscribe the user to receive
+                            data from the 'time' or 'sql' topics respectively
+                        </li>
+                        <li class="list-group-item list-group-item-primary">
+                            <span class="badge badge-success">#2</span>
+                            Clicking either subscribe button should, if that topic is not currently broadcasting
+                            anything, start broadcasting the time or sql results on the relevant respective topic
+                        </li>
+                        <li class="list-group-item list-group-item-primary">
+                            <span class="badge badge-success">#3</span>
+                            Any data received as a result of a subscription should be displayed under 'streamed data'
+                        </li>
+                        <li class="list-group-item list-group-item-primary">
+                            <span class="badge badge-success">#4</span>
+                            Clicking Unsubscribe on either button should unsubscribe the session from that topic
+                        </li>
+                        <li class="list-group-item list-group-item-primary">
+                            <span class="badge badge-success">#5</span>
+                            When nobody is subscribing to a topic any more, after the last unsubscription, stop
+                            broadcasting the data every second
+                        </li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <h2>Time (Subscribe)</h2>
+                    <p>
+                        This button, with id <code class="highlighter-rouge">#subscribe-time</code>, should subscribe
+                        the user to receive the current time every second
+                    </p>
+                    <button type="button" class="btn btn-primary btn-lg">Subscribe</button>
+                </div>
+                <div class="col">
+                    <h2>Time (Unsubscribe)</h2>
+                    <p>
+                        This button, with id <code class="highlighter-rouge">#unsubscribe-time</code>, should
+                        unsubscribe the user from the current time, and cancel the timer server-side if no more users
+                        are subscribed
+                    </p>
+                    <button type="button" class="btn btn-primary btn-lg">Unsubscribe</button>
+                </div>
+                <div class="col">
+                    <h2>Streamed Data</h2>
+                    <p>
+                        The div, with id <code class="highlighter-rouge">#data-time</code>, should be updated every time
+                        data is received from the server for the time subscription
+                    </p>
+                    <p>
+                        <div id="data-time" class="alert alert-primary" role="alert">
+                            No data yet...
+                        </div>
+                    </p>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 20px;">
+                <div class="col">
+                    <h2>Sql (Subscribe)</h2>
+                    <p>
+                        This button, with id <code class="highlighter-rouge">#subscribe-sql</code>, should subscribe
+                        the user to receive the current sql every second
+                    </p>
+                    <button type="button" class="btn btn-primary btn-lg">Subscribe</button>
+                </div>
+                <div class="col">
+                    <h2>Sql (Unsubscribe)</h2>
+                    <p>
+                        This button, with id <code class="highlighter-rouge">#unsubscribe-sql</code>, should
+                        unsubscribe the user from the current sql data stream, and cancel the timer server-side if no
+                        more users are subscribed
+                    </p>
+                    <button type="button" class="btn btn-primary btn-lg">Unsubscribe</button>
+                </div>
+                <div class="col">
+                    <h2>Streamed Data</h2>
+                    <p>
+                        The div, with id <code class="highlighter-rouge">#data-sql</code>, should be updated every time
+                        data is received from the server for the sql subscription
+                    </p>
+                    <p>
+                        <div id="data-sql" class="alert alert-primary" role="alert">
+                            No data yet...
+                        </div>
+                    </p>
+                </div>
+            </div>
+
+            <hr>
+
+            <footer>
+                <p class="text-muted">James Mallison - PHPNW 2017</p>
+            </footer>
+        </div>
+
+        <script type="text/javascript" src="assets/jquery.min.js"></script>
+        <script type="text/javascript" src="assets/popper.min.js"></script>
+        <script type="text/javascript" src="assets/bootstrap.min.js"></script>
+        <script type="text/javascript" src="assets/autobahn.min.js"></script>
+        <script type="text/javascript" src="assets/websockets.js"></script>
+    </body>
+</html>

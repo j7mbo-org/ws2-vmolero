@@ -6,6 +6,7 @@ use Ratchet\ConnectionInterface;
 use Ratchet\Wamp\Topic;
 use Ratchet\Wamp\WampServerInterface;
 use React\EventLoop\LoopInterface;
+use React\EventLoop\Timer\Timer;
 
 /**
  * @package Workshop
@@ -56,13 +57,14 @@ class EventHandler implements WampServerInterface
 
         //$sqlite->createFunction('sleep', 'sleep', 1);
         //$result = $sqlite->query('SELECT some_data, sleep(5) FROM data;');
-        $result = $sqlite->query('SELECT some_data FROM data;');
+        $result = $sqlite->query('SELECT some_data, RANDOM() FROM data;');
 
         $data = [];
 
         while ($row = $result->fetchArray())
         {
             $data[] = $row['some_data'];
+            $data[] = $row['RANDOM()'];
         }
 
         return $data;
